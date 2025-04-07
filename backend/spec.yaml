@@ -1,0 +1,67 @@
+openapi: 3.1.0
+info:
+  title: NotifyBot API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /status:
+    get:
+      summary: check bot health
+      description: Returns the status, uptime, and service name
+        ⚠️ This route is intended for basic health checks and diagnostics.
+        It requires no authentication or parameters and can be polled by monitoring tools or tested manually via curl or Postman.
+      operationId: getStatus
+      responses:
+        "200":
+          description: Bot is online and healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+  /send:
+    post:
+      summary: Send a single message
+      description: >
+        Accepts a JSON payload with a `message` field and logs it to the server.
+        Returns a confirmation response on success.
+
+        ⚠️ Request must include `Content-Type: application/json` header.
+      operationId: postSend
+      requestBody:
+        description: JSON payload with a message
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Hello Rocket.Chat!
+              required:
+                - message
+      responses:
+        "200":
+          description: Message successfully sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Message sent
+        "400":
+          description: Missing or invalid message field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Message is required
